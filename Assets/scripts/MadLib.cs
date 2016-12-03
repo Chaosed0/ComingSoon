@@ -8,7 +8,7 @@ public class MadLib : MonoBehaviour {
 	public string[] story;
 	public MadLibCandidates[] candidates;
 	private bool selectionActive = false;
-	private bool sentenceActive = false;
+	//private bool sentenceActive = false;
 	private int currentCandidate = 0;
 	private string[] selectedCandidates;
 	private const float TIME_BETWEEN = 3.0f;
@@ -29,7 +29,7 @@ public class MadLib : MonoBehaviour {
 			candidates[currentCandidate].ShowPrompt();
 		} else {
 			selectionActive = false;
-			sentenceActive = true;
+			//sentenceActive = true;
 			ClearCandidateChoices();
 			StartSentences();
 		}
