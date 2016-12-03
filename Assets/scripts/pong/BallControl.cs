@@ -42,7 +42,6 @@ public class BallControl : _Mono {
         }
 
         body.velocity = getVelocityVector();
-        Debug.Log("" + transform.localPosition);
 	}
 
     void ResetBall() {
