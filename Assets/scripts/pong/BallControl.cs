@@ -21,20 +21,20 @@ public class BallControl : _Mono {
 	}
 
 	void FixedUpdate () {
-        if (transform.position.y + boxCollider.size.y >= stageSize.y ||
-            transform.position.y - boxCollider.size.y <= -stageSize.y)
+        if (transform.localPosition.y + boxCollider.size.y >= stageSize.y ||
+            transform.localPosition.y - boxCollider.size.y <= -stageSize.y)
         {
-            Vector2 normal = new Vector2(0.0f, - Mathf.Sign(transform.position.y));
-            this.y = Mathf.Sign(transform.position.y) * (stageSize.y - boxCollider.size.y - 0.1f);
+            Vector2 normal = new Vector2(0.0f, - Mathf.Sign(transform.localPosition.y));
+            this.y = Mathf.Sign(transform.localPosition.y) * (stageSize.y - boxCollider.size.y - 0.1f);
             this.reflectMovement(normal);
         }
 
-        if (transform.position.x + boxCollider.size.x >= stageSize.x) {
+        if (transform.localPosition.x + boxCollider.size.x >= stageSize.x) {
             if (OnPlayerScored != null) {
                 OnPlayerScored.Invoke(1);
             }
             ResetBall();
-        } else if (transform.position.x - boxCollider.size.x <= -stageSize.x) {
+        } else if (transform.localPosition.x - boxCollider.size.x <= -stageSize.x) {
             if (OnPlayerScored != null) {
                 OnPlayerScored.Invoke(0);
             }
@@ -48,9 +48,8 @@ public class BallControl : _Mono {
         int direction = UnityEngine.Random.Range(0, 4);
         float rotation = 45.0f + direction * 90.0f;
         moveAngle = rotation;
-
-        this.x = 0.0f;
-        this.y = 0.0f;
+        this.x = this.transform.parent.transform.localPosition.x;
+        this.y = this.transform.parent.transform.localPosition.y;
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
