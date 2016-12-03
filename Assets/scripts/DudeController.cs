@@ -27,7 +27,7 @@ class DudeController : MonoBehaviour
             float actualSwitchTime = poseSwitchTime / 2.0f;
 
             if (poseSwitchTimer <= poseSwitchTime - actualSwitchTime) {
-                float interp = Util.easeInQuad(poseSwitchTimer / (poseSwitchTime - actualSwitchTime));
+                float interp = Util.easeInOutQuad(poseSwitchTimer / (poseSwitchTime - actualSwitchTime));
                 transform.localScale = new Vector3(initialScale.x * (1.0f - interp), initialScale.y, initialScale.z);
             } else {
                 if (needsSwitchPose) {
@@ -36,7 +36,7 @@ class DudeController : MonoBehaviour
                     spriteRenderer.sprite = poses[currentPoseIndex];
                 }
 
-                float interp = Util.easeOutQuad((poseSwitchTimer - actualSwitchTime) / (poseSwitchTime - actualSwitchTime));
+                float interp = Util.easeInOutQuad((poseSwitchTimer - actualSwitchTime) / (poseSwitchTime - actualSwitchTime));
                 transform.localScale = new Vector3(initialScale.x * interp, initialScale.y, initialScale.z);
             }
         } else {
