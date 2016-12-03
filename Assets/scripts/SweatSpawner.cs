@@ -23,11 +23,11 @@ public class SweatSpawner : MonoBehaviour {
 
     void SpawnDrop() {
         Vector2 spawnPosition;
-        spawnPosition.x = Random.Range(sweatSpawnArea.transform.position.x - sweatSpawnArea.size.x / 2.0f,
-            sweatSpawnArea.transform.position.x + sweatSpawnArea.size.x / 2.0f);
-        spawnPosition.y = Random.Range(sweatSpawnArea.transform.position.y - sweatSpawnArea.size.y / 2.0f,
-            sweatSpawnArea.transform.position.y + sweatSpawnArea.size.y / 2.0f);
+        spawnPosition.x = Random.Range(sweatSpawnArea.transform.localPosition.x - sweatSpawnArea.size.x / 2.0f,
+            sweatSpawnArea.transform.localPosition.x + sweatSpawnArea.size.x / 2.0f);
+        spawnPosition.y = Random.Range(sweatSpawnArea.transform.localPosition.y - sweatSpawnArea.size.y / 2.0f,
+            sweatSpawnArea.transform.localPosition.y + sweatSpawnArea.size.y / 2.0f);
 
-        Instantiate(sweatPrefab, spawnPosition, Quaternion.identity);
+        Instantiate(sweatPrefab, spawnPosition, Quaternion.identity, this.transform.parent);
     }
 }
