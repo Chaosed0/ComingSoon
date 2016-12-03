@@ -8,12 +8,13 @@ public class MadLibManager : MonoBehaviour {
 	private int currentLibIndex = 0;
 
 	// Use this for initialization
-	void Start () { 
-
+	void Start () {
+		StartNextMadlib();	
 	}
 
 	void StartNextMadlib() {
-
+		Util.Log(madlibs.Length);
+		madlibs[currentLibIndex].StartSelections();
 	}
 
 }
