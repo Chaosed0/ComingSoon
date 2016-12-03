@@ -8,7 +8,6 @@ public class SweatDrop : _Mono {
     public float finalDropSpeed = 3.0f;
 
     public float initialScale = 0.1f;
-    public float finalScale = 1.0f;
 
     enum DropState {
         Forming,
@@ -19,8 +18,10 @@ public class SweatDrop : _Mono {
     DropState state = DropState.Forming;
     float timer = 0.0f;
     float moveSpeed = 0.0f;
+    float finalScale = 1.0f;
 
 	void Start () {
+        finalScale = transform.localScale.x;
         transform.localScale = new Vector2(initialScale, initialScale);
 	}
 
