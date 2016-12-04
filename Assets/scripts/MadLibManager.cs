@@ -22,10 +22,11 @@ public class MadLibManager : MonoBehaviour {
 
     public SoundSystem soundSystem;
     public DudeController dudeController;
+    public DudeController audience;
 
 	// Use this for initialization
 	void Start () {
-        TransitionToDemo();
+        DoIntroSequence();
     }
 
     void DoIntroSequence() {
@@ -67,11 +68,19 @@ public class MadLibManager : MonoBehaviour {
 	}
 
     void EndMadlib(MadLibCandidates.ChoiceGrade finalGrade) {
+        int poseIndex = 0;
         if (finalGrade == MadLibCandidates.ChoiceGrade.Good) {
             soundSystem.PlaySound("MadlibChoiceGood");
+            poseIndex = 2;
         } else {
             soundSystem.PlaySound("MadlibChoiceBad");
+            poseIndex = 1;
         }
+
+        Sequence seq = DOTween.Sequence();
+        seq.AppendCallback(() => audience.switchToPose(poseIndex));
+        seq.AppendInterval(4.0f);
+        seq.AppendCallback(() => audience.switchToRestPose());
 
         dudeController.switchToRestPose();
 

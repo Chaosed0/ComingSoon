@@ -59,4 +59,10 @@ public class DudeController : MonoBehaviour
         poseSwitchTimer = 0.0f;
         needsSwitchPose = true;
     }
+
+    public void switchToPose(int index) {
+        nextPoseIndex = index;
+        poseSwitchTimer = 0.0f;
+        needsSwitchPose = true;
+    }
 }
