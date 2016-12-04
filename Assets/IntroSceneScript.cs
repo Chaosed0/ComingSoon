@@ -5,9 +5,10 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class IntroSceneScript : MonoBehaviour {
+    public CanvasGroup[] pages;
+	private int currentIndex = -1;
 
 	private string[] instructions;
-	private int currentIndex = 0;
 
 	// Use this for initialization
 	void Start() {
@@ -21,11 +22,14 @@ public class IntroSceneScript : MonoBehaviour {
 
 	private void Update() {
 		if (Input.GetKeyDown(KeyCode.Space)) {
-			currentIndex++;
-			if (currentIndex < instructions.Length) {
-				GameObject.Find("IntroTextUI").GetComponent<Text>().text = instructions[currentIndex];
+            if (currentIndex >= 0 && currentIndex < pages.Length - 1) {
+                pages[currentIndex].alpha = 0.0f;
+            }
+            ++currentIndex;
+			if (currentIndex < pages.Length) {
+                pages[currentIndex].alpha = 1.0f;
 			} else {
-				SceneManager.LoadScene("PlayableFirstDemo");
+				SceneManager.LoadScene("FirstDemo");
 			}
 		}
 	}
