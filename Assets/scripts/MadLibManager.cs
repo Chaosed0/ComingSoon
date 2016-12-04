@@ -30,6 +30,9 @@ public class MadLibManager : MonoBehaviour {
     public DudeController dudeController;
     public DudeController audience;
 
+    public float sweatAccelRate = 1.0f;
+    public float sweatLevel = 0;
+
     Phase phase = Phase.BeforeDemo;
     int promptCounter = 0;
 
@@ -37,6 +40,13 @@ public class MadLibManager : MonoBehaviour {
 	void Start () {
         DoIntroSequence();
         //TransitionToDemo(DOTween.Sequence());
+    }
+
+    void Update() {
+        sweatLevel += sweatAccelRate * Time.deltaTime;
+        if (sweatLevel >= 100.0f) {
+            sweatLevel = 100.0f;
+        }
     }
 
     void DoIntroSequence() {
@@ -74,15 +84,13 @@ public class MadLibManager : MonoBehaviour {
         madlibs[currentLibIndex].onSwitchSentence += OnSwitchSentence;
 	}
 
-    void EndMadlib(MadLibCandidates.ChoiceGrade finalGrade) {
-        int poseIndex = 0;
-        if (finalGrade == MadLibCandidates.ChoiceGrade.Good) {
+    void EndMadlib(float finalGrade) {
+        if (finalGrade > 1.5f) {
             soundSystem.PlaySound("MadlibChoiceGood");
-            poseIndex = 2;
-        } else {
+        } else if (finalGrade < 0.0f) {
             soundSystem.PlaySound("MadlibChoiceBad");
-            poseIndex = 1;
         }
+        sweatLevel -= finalGrade;
 
         ClearCandidateChoices();
 

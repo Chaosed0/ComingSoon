@@ -29,7 +29,7 @@ public class IntroSceneScript : MonoBehaviour {
 			if (currentIndex < pages.Length) {
                 pages[currentIndex].alpha = 1.0f;
 			} else {
-				SceneManager.LoadScene("FirstDemo");
+				SceneManager.LoadScene("FirstDemoWithJokes");
 			}
 		}
 	}

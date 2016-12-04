@@ -11,11 +11,11 @@ public class MadLib : MonoBehaviour {
 	//private bool sentenceActive = false;
 	private int currentCandidate = 0;
 	private string[] selectedCandidates = new string[0];
-	private MadLibCandidates.ChoiceGrade[] selectedCandidateGrades = new MadLibCandidates.ChoiceGrade[0];
+	private float[] selectedCandidateGrades = new float[0];
 	private const float TIME_BETWEEN = 4.0f;
 	private int currentDisplayingStory = 0;
 
-	public delegate void FinishCallback(MadLibCandidates.ChoiceGrade grade);
+	public delegate void FinishCallback(float finalGrade);
 	public FinishCallback finishCallback;
 
     public delegate void SwitchSentence();
@@ -27,7 +27,7 @@ public class MadLib : MonoBehaviour {
 	public void StartSelections() {
 		if (candidates.Length > 0) {
 			selectedCandidates = new string[candidates.Length];
-			selectedCandidateGrades = new MadLibCandidates.ChoiceGrade[candidates.Length];
+			selectedCandidateGrades = new float[candidates.Length];
 			selectionActive = true;
 			candidates[currentCandidate].ShowPrompt();
 		} else {
@@ -89,20 +89,12 @@ public class MadLib : MonoBehaviour {
 
 				float avg = 0.0f;
 				for (int i = 0; i < selectedCandidateGrades.Length; i++) {
-					avg += (int)selectedCandidateGrades[i];
+					avg += selectedCandidateGrades[i];
 				}
 				avg /= selectedCandidateGrades.Length;
-				MadLibCandidates.ChoiceGrade finalGrade;
-				float goodDiff = Mathf.Abs((int)MadLibCandidates.ChoiceGrade.Good - avg);
-				float badDiff = Mathf.Abs((int)MadLibCandidates.ChoiceGrade.Bad - avg);
-				if (goodDiff < badDiff) {
-					finalGrade = MadLibCandidates.ChoiceGrade.Good;
-				} else {
-					finalGrade = MadLibCandidates.ChoiceGrade.Bad;
-				}
 
 				if (finishCallback != null) {
-					finishCallback(finalGrade);
+					finishCallback(avg);
 				}
 			});
         }

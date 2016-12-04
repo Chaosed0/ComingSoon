@@ -5,21 +5,15 @@ using UnityEngine;
 
 public class MadLibCandidates : MonoBehaviour {
 
-    [System.Serializable]
-    public enum ChoiceGrade {
-        Good,
-        Bad
-    };
-
 	public string prompt;
 	public string upCandidate;
-    public ChoiceGrade upGrade = ChoiceGrade.Good;
+    public float upGrade = 0;
 	public string downCandidate;
-    public ChoiceGrade downGrade = ChoiceGrade.Good;
+    public float downGrade = 1;
 	public string leftCandidate;
-    public ChoiceGrade leftGrade = ChoiceGrade.Bad;
+    public float leftGrade = 2;
 	public string rightCandidate;
-    public ChoiceGrade rightGrade = ChoiceGrade.Bad;
+    public float rightGrade = 3;
 	public string selectedCandidate { get; set; }
 
 	public void ShowPrompt() {

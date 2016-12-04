@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SweatSpawner : MonoBehaviour {
-    public float sweatSpawnTime = 1.0f;
+    public float minSweatSpawnTime = 3.0f;
+    public float maxSweatSpawnTime = 0.1f;
     public SweatDrop[] sweatPrefabs;
+
+    public MadLibManager manager;
 
     BoxCollider2D sweatSpawnArea = null;
     float sweatSpawnTimer = 0.0f;
@@ -14,10 +17,13 @@ public class SweatSpawner : MonoBehaviour {
 	}
 
 	void Update () {
+        float interp = manager.sweatLevel / 100.0f;
+        float sweatSpawnTime = minSweatSpawnTime + (interp * (maxSweatSpawnTime - minSweatSpawnTime));
+
         sweatSpawnTimer += Time.deltaTime;
         if (sweatSpawnTimer >= sweatSpawnTime) {
             SpawnDrop();
-            sweatSpawnTimer = 0.0f;
+            sweatSpawnTimer -= sweatSpawnTime;
         }
 	}
 
