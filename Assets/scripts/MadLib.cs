@@ -22,7 +22,8 @@ public class MadLib : MonoBehaviour {
     public SwitchSentence onSwitchSentence;
 
     public SoundSystem soundSystem;
-	
+	public DudeController dudeController;
+
 	public void StartSelections() {
 		if (candidates.Length > 0) {
 			selectedCandidates = new string[candidates.Length];
@@ -42,7 +43,7 @@ public class MadLib : MonoBehaviour {
 			candidates[currentCandidate].ShowPrompt();
 		} else {
 			selectionActive = false;
-            currentCandidate = 0;
+			currentCandidate = 0;
 			//sentenceActive = true;
 			ClearCandidateChoices();
 			StartSentences();
@@ -53,8 +54,14 @@ public class MadLib : MonoBehaviour {
 		for (int i = 0; i < story.Length; i++) {
 			story[i] = string.Format(story[i], selectedCandidates);
 		}
-		GameObject.Find("PromptTextUI").GetComponent<Text>().text = story[currentDisplayingStory];
-		WaitAndDisplayNextSentence();
+
+		dudeController.StartCharacterTransformSequence();
+		Sequence s = DOTween.Sequence();
+		s.AppendInterval(dudeController.poseSwitchTime);
+		s.AppendCallback(() => {
+			GameObject.Find("PromptTextUI").GetComponent<Text>().text = story[currentDisplayingStory].ToLower();
+			WaitAndDisplayNextSentence();
+		});
         if (onSwitchSentence != null) {
             onSwitchSentence();
         }
@@ -63,31 +70,41 @@ public class MadLib : MonoBehaviour {
 	private void NextSentence() {
 		currentDisplayingStory++;
 		if (currentDisplayingStory < story.Length) {
-			GameObject.Find("PromptTextUI").GetComponent<Text>().text = story[currentDisplayingStory];
-			WaitAndDisplayNextSentence();
-            if (onSwitchSentence != null) {
-                onSwitchSentence();
-            }
+			dudeController.StartCharacterTransformSequence();
+			Sequence s = DOTween.Sequence();
+			s.AppendInterval(dudeController.poseSwitchTime);
+			s.AppendCallback(() => {
+				GameObject.Find("PromptTextUI").GetComponent<Text>().text = story[currentDisplayingStory].ToLower();
+				WaitAndDisplayNextSentence();
+				if (onSwitchSentence != null) {
+					onSwitchSentence();
+				}
+			});
 		} else {
-            currentDisplayingStory = 0;
+			dudeController.StartResting();
+			Sequence s = DOTween.Sequence();
+			s.AppendInterval(dudeController.poseSwitchTime);
+			s.AppendCallback(() => {
+				currentDisplayingStory = 0;
 
-            float avg = 0.0f;
-            for (int i = 0; i < selectedCandidateGrades.Length; i++) {
-                avg += (int)selectedCandidateGrades[i];
-            }
-            avg /= selectedCandidateGrades.Length;
-            MadLibCandidates.ChoiceGrade finalGrade;
-            float goodDiff = Mathf.Abs((int)MadLibCandidates.ChoiceGrade.Good - avg);
-            float badDiff = Mathf.Abs((int)MadLibCandidates.ChoiceGrade.Bad - avg);
-            if (goodDiff < badDiff) {
-                finalGrade = MadLibCandidates.ChoiceGrade.Good;
-            } else {
-                finalGrade = MadLibCandidates.ChoiceGrade.Bad;
-            }
+				float avg = 0.0f;
+				for (int i = 0; i < selectedCandidateGrades.Length; i++) {
+					avg += (int)selectedCandidateGrades[i];
+				}
+				avg /= selectedCandidateGrades.Length;
+				MadLibCandidates.ChoiceGrade finalGrade;
+				float goodDiff = Mathf.Abs((int)MadLibCandidates.ChoiceGrade.Good - avg);
+				float badDiff = Mathf.Abs((int)MadLibCandidates.ChoiceGrade.Bad - avg);
+				if (goodDiff < badDiff) {
+					finalGrade = MadLibCandidates.ChoiceGrade.Good;
+				} else {
+					finalGrade = MadLibCandidates.ChoiceGrade.Bad;
+				}
 
-            if (finishCallback != null) {
-                finishCallback(finalGrade);
-            }
+				if (finishCallback != null) {
+					finishCallback(finalGrade);
+				}
+			});
         }
 	}
 

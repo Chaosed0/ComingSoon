@@ -45,17 +45,17 @@ public class MadLibManager : MonoBehaviour {
         soundSystem.PlaySound("Opening");
 
         Sequence seq = DOTween.Sequence();
-        seq.Insert(3.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 3.0f));
-        seq.Insert(3.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 3.0f));
-        seq.AppendInterval(2.0f);
-        seq.AppendCallback(StartNextMadlib);
+        seq.Insert(0.5f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 3.0f));
+        seq.Insert(0.5f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 3.0f));
+        seq.AppendInterval(0.4f);
+		seq.AppendCallback(StartNextMadlib);
     }
 
     void TransitionToDemo(Sequence seq) {
         seq.Insert(4.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainStart, 2.0f));
         seq.Insert(4.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainStart, 2.0f));
         seq.AppendInterval(2.0f);
-        seq.AppendCallback(()=> perspective1.gameObject.SetActive(false));
+		seq.AppendCallback(()=> perspective1.gameObject.SetActive(false));
         seq.AppendCallback(()=> perspective2.gameObject.SetActive(true));
         seq.Insert(8.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 2.0f));
         seq.Insert(8.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 2.0f));
@@ -87,11 +87,9 @@ public class MadLibManager : MonoBehaviour {
         ClearCandidateChoices();
 
         Sequence seq = DOTween.Sequence();
-        seq.AppendCallback(() => audience.switchToPose(poseIndex));
+        //seq.AppendCallback(() => audience.switchToPose(poseIndex));
         seq.AppendInterval(4.0f);
-        seq.AppendCallback(() => audience.switchToRestPose());
-
-        dudeController.switchToRestPose();
+        //seq.AppendCallback(() => audience.switchToRestPose());
         
         ++promptCounter;
         if (phase == Phase.BeforeDemo && promptCounter >= promptsBeforeDemo) {
@@ -109,7 +107,6 @@ public class MadLibManager : MonoBehaviour {
     }
 
     void OnSwitchSentence() {
-        dudeController.switchToRandomActionPose();
         int randSound = Random.Range(1, 5);
         soundSystem.PlaySound("Murmur" + randSound);
     }

@@ -12,10 +12,12 @@ class DudeTester : MonoBehaviour
     }
 
     void Update() {
+		/*
         timer += Time.deltaTime;
         if (timer >= period) {
             timer = 0.0f;
-            controller.switchToRandomActionPose();
+            controller.switchToRandomActionOrRestPose();
         }
+		*/
     }
 }

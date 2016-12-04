@@ -1,28 +1,49 @@
 ﻿using System;
 using UnityEngine;
+using DG.Tweening;
 
 public class DudeController : MonoBehaviour
 {
-    public float poseSwitchTime = 0.4f;
-    public float scaling = -0.1f;
-    public Sprite[] poses = null;
-    public int restPose = 0;
-    public SpriteRenderer spriteRenderer = null;
+	public float poseSwitchTime { get; set; }
+	public Sprite[] poses = null;
+	public int restPose = 0;
+	public _Mono dude = null;
+	private bool nextPoseIsRest = true;
 
-    int currentPoseIndex = 0;
-    int nextPoseIndex = 0;
+	int currentPoseIndex = 0;
+	int nextPoseIndex = 0;
+	bool needsSwitchPose = false;
+	Vector2 initialScale = new Vector2(0.5f, 0.5f);
+	Vector2 lowestScale = new Vector2(0.4f, 0.4f);
+	Sequence actionSequence;
 
-    float poseSwitchTimer = 1.0f;
-    bool needsSwitchPose = false;
-    Vector3 initialScale = new Vector3(1.0f, 1.0f, 1.0f);
-
-    void Start() {
-        initialScale = transform.localScale;
+	void Start() {
+		actionSequence = DOTween.Sequence();
         currentPoseIndex = restPose;
-        spriteRenderer.sprite = poses[restPose];
-    }
+		dude.spriteRenderer.sprite = poses[restPose];
+		poseSwitchTime = 0.25f;
+	}
+
+	public void StartCharacterTransformSequence() {
+		actionSequence = DOTween.Sequence();
+		nextPoseIsRest = false;
+		actionSequence.AppendInterval(poseSwitchTime);
+		actionSequence.Append(transform.DOScale(0.4f, poseSwitchTime / 2f));
+		actionSequence.AppendCallback(switchToRandomActionOrRestPose);
+		actionSequence.Append(transform.DOScale(0.5f, poseSwitchTime / 2f));
+	}
+
+	public void StartResting() {
+		actionSequence = DOTween.Sequence();
+		nextPoseIsRest = true;
+		actionSequence.AppendInterval(poseSwitchTime);
+		actionSequence.Append(transform.DOScale(0.4f, poseSwitchTime / 2f));
+		actionSequence.AppendCallback(switchToRandomActionOrRestPose);
+		actionSequence.Append(transform.DOScale(0.5f, poseSwitchTime / 2f));
+	}
 
     void Update() {
+		/*
         if (poseSwitchTimer <= poseSwitchTime) {
             poseSwitchTimer += Time.deltaTime;
             float actualSwitchTime = poseSwitchTime / 2.0f;
@@ -42,28 +63,20 @@ public class DudeController : MonoBehaviour
             }
         } else {
             transform.localScale = initialScale;
-        }
+        }*/
     }
 
-    public void switchToRandomActionPose() {
-        do {
-            nextPoseIndex = UnityEngine.Random.Range(0, poses.Length);
-        } while (nextPoseIndex == currentPoseIndex || nextPoseIndex == restPose);
-
-        poseSwitchTimer = 0.0f;
-        needsSwitchPose = true;
-    }
-
-    public void switchToRestPose() {
-        nextPoseIndex = restPose;
-
-        poseSwitchTimer = 0.0f;
-        needsSwitchPose = true;
-    }
-
-    public void switchToPose(int index) {
-        nextPoseIndex = index;
-        poseSwitchTimer = 0.0f;
-        needsSwitchPose = true;
-    }
+    public void switchToRandomActionOrRestPose() {
+		Util.Log(nextPoseIsRest);
+		if (nextPoseIsRest) {
+			nextPoseIndex = restPose;
+		} else {
+			do {
+				nextPoseIndex = UnityEngine.Random.Range(0, poses.Length);
+			} while (nextPoseIndex == currentPoseIndex || nextPoseIndex == restPose);
+			dude.xs *= UnityEngine.Random.Range(0, 1.0f) < 0.5f ? -1.0f : 1.0f;
+		}
+		dude.spriteRenderer.sprite = poses[nextPoseIndex];
+		currentPoseIndex = nextPoseIndex;
+	}
 }
