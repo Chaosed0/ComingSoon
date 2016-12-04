@@ -24,7 +24,7 @@ public class MadLibManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        TransitionToDemo();
+        DoIntroSequence();
     }
 
     void DoIntroSequence() {
