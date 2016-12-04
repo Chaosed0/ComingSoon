@@ -11,15 +11,19 @@ public class MadLib : MonoBehaviour {
 	//private bool sentenceActive = false;
 	private int currentCandidate = 0;
 	private string[] selectedCandidates = new string[0];
+	private MadLibCandidates.ChoiceGrade[] selectedCandidateGrades = new MadLibCandidates.ChoiceGrade[0];
 	private const float TIME_BETWEEN = 3.0f;
 	private int currentDisplayingStory = 0;
 
-	public delegate void FinishCallback(); //Not used yet
+	public delegate void FinishCallback(MadLibCandidates.ChoiceGrade grade);
 	public FinishCallback finishCallback;
+
+    public SoundSystem soundSystem;
 	
 	public void StartSelections() {
 		if (candidates.Length > 0) {
 			selectedCandidates = new string[candidates.Length];
+			selectedCandidateGrades = new MadLibCandidates.ChoiceGrade[candidates.Length];
 			selectionActive = true;
 			candidates[currentCandidate].ShowPrompt();
 		} else {
@@ -55,8 +59,22 @@ public class MadLib : MonoBehaviour {
 			GameObject.Find("PromptTextUI").GetComponent<Text>().text = story[currentDisplayingStory];
 			WaitAndDisplayNextSentence();
 		} else {
+            float avg = 0.0f;
+            for (int i = 0; i < selectedCandidateGrades.Length; i++) {
+                avg += (int)selectedCandidateGrades[i];
+            }
+            avg /= selectedCandidateGrades.Length;
+            MadLibCandidates.ChoiceGrade finalGrade;
+            float goodDiff = Mathf.Abs((int)MadLibCandidates.ChoiceGrade.Good - avg);
+            float badDiff = Mathf.Abs((int)MadLibCandidates.ChoiceGrade.Bad - avg);
+            if (goodDiff < badDiff) {
+                finalGrade = MadLibCandidates.ChoiceGrade.Good;
+            } else {
+                finalGrade = MadLibCandidates.ChoiceGrade.Bad;
+            }
+
             if (finishCallback != null) {
-                finishCallback();
+                finishCallback(finalGrade);
             }
         }
 	}
@@ -81,16 +99,22 @@ public class MadLib : MonoBehaviour {
 			Input.GetKeyDown(KeyCode.DownArrow) || 
 			Input.GetKeyDown(KeyCode.LeftArrow) || 
 			Input.GetKeyDown(KeyCode.RightArrow)) {
+            
 			if (Input.GetKeyDown(KeyCode.UpArrow)) {
 				selectedCandidates[currentCandidate] = GameObject.Find("UpTextUI").GetComponent<Text>().text;
+                selectedCandidateGrades[currentCandidate] = candidates[currentCandidate].upGrade;
 			} else if (Input.GetKeyDown(KeyCode.DownArrow)) {
 				selectedCandidates[currentCandidate] = GameObject.Find("DownTextUI").GetComponent<Text>().text;
+                selectedCandidateGrades[currentCandidate] = candidates[currentCandidate].downGrade;
 			} else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
 				selectedCandidates[currentCandidate] = GameObject.Find("LeftTextUI").GetComponent<Text>().text;
+                selectedCandidateGrades[currentCandidate] = candidates[currentCandidate].leftGrade;
 			} else if (Input.GetKeyDown(KeyCode.RightArrow)) {
 				selectedCandidates[currentCandidate] = GameObject.Find("RightTextUI").GetComponent<Text>().text;
+                selectedCandidateGrades[currentCandidate] = candidates[currentCandidate].rightGrade;
 			}
-			Util.Log("Text chosen " + selectedCandidates[currentCandidate]);
+
+			//Util.Log("Text chosen " + selectedCandidates[currentCandidate]);
 			NextSelection();
 		}
 	}
