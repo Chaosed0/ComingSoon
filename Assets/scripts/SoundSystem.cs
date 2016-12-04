@@ -21,7 +21,6 @@ public class SoundSystem : MonoBehaviour {
 
     public float musicVolume = 1.0f;
     public float effectVolume = 1.0f;
-    private float effectVolumeQuieted = 0.1f;
 
     private Dictionary<string, AudioClip> soundMap = new Dictionary<string, AudioClip>(); 
     private Dictionary<string, AudioClip> bgmMap = new Dictionary<string, AudioClip>(); 
