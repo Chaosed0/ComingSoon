@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ScoreText : MonoBehaviour {
-    public BallControl ball;
     public int player;
 
     Text text;
@@ -12,13 +11,10 @@ public class ScoreText : MonoBehaviour {
 
     void Start() {
         text = GetComponent<Text>();
-        ball.OnPlayerScored.AddListener(onPlayerScored);
     }
 
-    void onPlayerScored(int player) {
-        if (this.player == player) {
-            ++score;
-            text.text = "" + score;
-        }
+    public void incrementScore() {
+        ++score;
+        text.text = "" + score;
     }
 }

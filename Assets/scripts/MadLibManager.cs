@@ -20,16 +20,17 @@ public class MadLibManager : MonoBehaviour {
     public Transform perspective2;
     public Transform pongGame;
 
-    public AudioSource musicSource;
-    public AudioClip introClip;
-    public AudioClip pongClip;
+    public SoundSystem soundSystem;
 
 	// Use this for initialization
 	void Start () {
+        TransitionToDemo();
+    }
+
+    void DoIntroSequence() {
         ClearCandidateChoices();
 
-        musicSource.clip = introClip;
-        musicSource.Play();
+        soundSystem.PlayBackgroundMusic("Opening");
 
         Sequence seq = DOTween.Sequence();
         seq.Insert(3.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 3.0f));
@@ -53,9 +54,7 @@ public class MadLibManager : MonoBehaviour {
 	}
 
     void StartPong() {
-        musicSource.loop = true;
-        musicSource.clip = pongClip;
-        musicSource.Play();
+        soundSystem.PlayBackgroundMusic("Pong");
         pongGame.gameObject.SetActive(true);
     }
 
