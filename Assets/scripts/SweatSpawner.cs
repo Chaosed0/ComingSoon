@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SweatSpawner : MonoBehaviour {
-    public float minSweatSpawnTime = 3.0f;
+    public float minSweatSpawnTime = 10.0f;
     public float maxSweatSpawnTime = 0.1f;
     public SweatDrop[] sweatPrefabs;
 
@@ -17,7 +17,7 @@ public class SweatSpawner : MonoBehaviour {
 	}
 
 	void Update () {
-        float interp = manager.sweatLevel / 100.0f;
+        float interp = Mathf.Sin(manager.sweatLevel / 100.0f * Mathf.PI / 2.0f);
         float sweatSpawnTime = minSweatSpawnTime + (interp * (maxSweatSpawnTime - minSweatSpawnTime));
 
         sweatSpawnTimer += Time.deltaTime;

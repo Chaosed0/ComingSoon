@@ -52,6 +52,10 @@ public class MadLibManager : MonoBehaviour {
         }
     }
 
+    public void addSweatLevel(float sweatLevel) {
+        this.sweatLevel += sweatLevel;
+    }
+
     void DoIntroSequence() {
         ClearCandidateChoices();
 
@@ -135,6 +139,7 @@ public class MadLibManager : MonoBehaviour {
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("DisplayTextUI").GetComponent<Text>().text = "";
+		GameObject.Find("UIDirArrows").GetComponent<Image>().enabled = false;
 		GameObject.Find("MadlibPanel").GetComponent<CanvasGroup>().alpha = 0.0f;
 	}
 }
