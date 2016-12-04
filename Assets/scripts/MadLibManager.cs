@@ -13,8 +13,12 @@ public class MadLibManager : MonoBehaviour {
     public _Mono leftCurtain;
     public _Mono rightCurtain;
 
-    public float curtainTarget = 20.0f;
-    public float curtainTime = 2.0f;
+    public float curtainStart = 0.0f;
+    public float curtainTarget = 10.0f;
+
+    public Transform perspective1;
+    public Transform perspective2;
+    public Transform pongGame;
 
 	// Use this for initialization
 	void Start () {
@@ -22,14 +26,29 @@ public class MadLibManager : MonoBehaviour {
 
         Sequence seq = DOTween.Sequence();
         seq.AppendInterval(1.0f);
-        seq.Insert(1.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, curtainTime));
-        seq.Insert(1.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, curtainTime));
+        seq.Insert(1.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 2.0f));
+        seq.Insert(1.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 2.0f));
         seq.AppendInterval(2.0f);
         seq.AppendCallback(StartNextMadlib);
+    }
+
+    void TransitionToDemo() {
+        ClearCandidateChoices();
+
+        Sequence seq = DOTween.Sequence();
+        seq.Insert(0.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainStart, 2.0f));
+        seq.Insert(0.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainStart, 2.0f));
+        seq.AppendInterval(2.0f);
+        seq.AppendCallback(()=> { perspective1.gameObject.SetActive(false); Debug.Log("test"); });
+        seq.AppendCallback(()=> perspective2.gameObject.SetActive(true));
+        seq.Insert(4.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 2.0f));
+        seq.Insert(4.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 2.0f));
+        seq.AppendCallback(()=> pongGame.gameObject.SetActive(true));
 	}
 
 	void StartNextMadlib() {
 		madlibs[currentLibIndex].StartSelections();
+        madlibs[currentLibIndex].finishCallback += TransitionToDemo;
 	}
     
 	public void ClearCandidateChoices() {

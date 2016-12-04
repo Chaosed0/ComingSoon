@@ -13,8 +13,9 @@ public class MadLib : MonoBehaviour {
 	private string[] selectedCandidates;
 	private const float TIME_BETWEEN = 3.0f;
 	private int currentDisplayingStory = 0;
+
 	public delegate void FinishCallback(); //Not used yet
-	private FinishCallback finishCallback;
+	public FinishCallback finishCallback;
 	
 	public void StartSelections() {
 		selectedCandidates = new string[candidates.Length];
@@ -49,8 +50,10 @@ public class MadLib : MonoBehaviour {
 			GameObject.Find("PromptTextUI").GetComponent<Text>().text = story[currentDisplayingStory];
 			WaitAndDisplayNextSentence();
 		} else {
-			//WaitAndDoCallback();
-		}
+            if (finishCallback != null) {
+                finishCallback();
+            }
+        }
 	}
 
 	private void WaitAndDisplayNextSentence() {
