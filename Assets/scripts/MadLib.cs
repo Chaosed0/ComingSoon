@@ -13,6 +13,7 @@ public class MadLib : MonoBehaviour {
 	private string[] selectedCandidates = new string[0];
 	private float[] selectedCandidateGrades = new float[0];
 	private const float TIME_BETWEEN = 4.0f;
+	private const float TIME_BETWEEN_LONG = 7.0f;
 	private int currentDisplayingStory = 0;
 
 	public delegate void FinishCallback(float finalGrade);
@@ -52,6 +53,8 @@ public class MadLib : MonoBehaviour {
 
 	public void StartSentences() {
 		for (int i = 0; i < story.Length; i++) {
+            story[i] = story[i].Replace("{", "<color=yellow>{");
+            story[i] = story[i].Replace("}", "}</color>");
 			story[i] = string.Format(story[i], selectedCandidates);
 		}
 
@@ -59,8 +62,16 @@ public class MadLib : MonoBehaviour {
 		Sequence s = DOTween.Sequence();
 		s.AppendInterval(dudeController.poseSwitchTime);
 		s.AppendCallback(() => {
-			GameObject.Find("PromptTextUI").GetComponent<Text>().text = story[currentDisplayingStory].ToLower();
-			WaitAndDisplayNextSentence();
+            string story = this.story[currentDisplayingStory];
+            GameObject.Find("MadlibPanel").GetComponent<CanvasGroup>().alpha = 1.0f;
+            GameObject.Find("DisplayTextUI").GetComponent<Text>().text = story;
+
+            bool isLong = false;
+            if (story.Length >= 100) {
+                isLong = true;
+            }
+
+			WaitAndDisplayNextSentence(isLong);
 		});
         if (onSwitchSentence != null) {
             onSwitchSentence();
@@ -74,11 +85,15 @@ public class MadLib : MonoBehaviour {
 			Sequence s = DOTween.Sequence();
 			s.AppendInterval(dudeController.poseSwitchTime);
 			s.AppendCallback(() => {
-				GameObject.Find("PromptTextUI").GetComponent<Text>().text = story[currentDisplayingStory].ToLower();
-				WaitAndDisplayNextSentence();
-				if (onSwitchSentence != null) {
-					onSwitchSentence();
-				}
+                string story = this.story[currentDisplayingStory];
+                GameObject.Find("DisplayTextUI").GetComponent<Text>().text = story;
+
+                bool isLong = false;
+                if (story.Length >= 100) {
+                    isLong = true;
+                }
+
+                WaitAndDisplayNextSentence(isLong);
 			});
 		} else {
 			dudeController.StartResting();
@@ -87,22 +102,21 @@ public class MadLib : MonoBehaviour {
 			s.AppendCallback(() => {
 				currentDisplayingStory = 0;
 
-				float avg = 0.0f;
+				float sum = 0.0f;
 				for (int i = 0; i < selectedCandidateGrades.Length; i++) {
-					avg += selectedCandidateGrades[i];
+					sum += selectedCandidateGrades[i];
 				}
-				avg /= selectedCandidateGrades.Length;
 
 				if (finishCallback != null) {
-					finishCallback(avg);
+					finishCallback(sum);
 				}
 			});
         }
 	}
 
-	private void WaitAndDisplayNextSentence() {
+	private void WaitAndDisplayNextSentence(bool isLong) {
 		Sequence s = DOTween.Sequence();
-		s.AppendInterval(TIME_BETWEEN);
+		s.AppendInterval(isLong ? TIME_BETWEEN_LONG : TIME_BETWEEN);
 		s.AppendCallback(NextSentence);
 	}
 
@@ -112,6 +126,7 @@ public class MadLib : MonoBehaviour {
 		GameObject.Find("LeftTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("RightTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = "";
+		GameObject.Find("DisplayTextUI").GetComponent<Text>().text = "";
 	}
 
 	public void Update() {
@@ -122,16 +137,16 @@ public class MadLib : MonoBehaviour {
 			Input.GetKeyDown(KeyCode.RightArrow)) {
             
 			if (Input.GetKeyDown(KeyCode.UpArrow)) {
-				selectedCandidates[currentCandidate] = GameObject.Find("UpTextUI").GetComponent<Text>().text;
+				selectedCandidates[currentCandidate] = candidates[currentCandidate].upCandidate;
                 selectedCandidateGrades[currentCandidate] = candidates[currentCandidate].upGrade;
 			} else if (Input.GetKeyDown(KeyCode.DownArrow)) {
-				selectedCandidates[currentCandidate] = GameObject.Find("DownTextUI").GetComponent<Text>().text;
+				selectedCandidates[currentCandidate] = candidates[currentCandidate].downCandidate;
                 selectedCandidateGrades[currentCandidate] = candidates[currentCandidate].downGrade;
 			} else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-				selectedCandidates[currentCandidate] = GameObject.Find("LeftTextUI").GetComponent<Text>().text;
+				selectedCandidates[currentCandidate] = candidates[currentCandidate].leftCandidate;
                 selectedCandidateGrades[currentCandidate] = candidates[currentCandidate].leftGrade;
 			} else if (Input.GetKeyDown(KeyCode.RightArrow)) {
-				selectedCandidates[currentCandidate] = GameObject.Find("RightTextUI").GetComponent<Text>().text;
+				selectedCandidates[currentCandidate] = candidates[currentCandidate].rightCandidate;
                 selectedCandidateGrades[currentCandidate] = candidates[currentCandidate].rightGrade;
 			}
 

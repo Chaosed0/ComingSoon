@@ -67,7 +67,6 @@ public class DudeController : MonoBehaviour
     }
 
     public void switchToRandomActionOrRestPose() {
-		Util.Log(nextPoseIsRest);
 		if (nextPoseIsRest) {
 			nextPoseIndex = restPose;
 		} else {

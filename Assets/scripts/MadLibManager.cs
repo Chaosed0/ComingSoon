@@ -19,7 +19,7 @@ public class MadLibManager : MonoBehaviour {
 
     public float curtainStart = 0.0f;
     public float curtainTarget = 10.0f;
-    public int promptsBeforeDemo = 1;
+    public int promptsBeforeDemo = 3;
     public int promptsAfterDemo = 3;
 
     public Transform perspective1;
@@ -39,6 +39,9 @@ public class MadLibManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         DoIntroSequence();
+
+        Debug.Assert(promptsBeforeDemo + promptsAfterDemo == madlibs.Length);
+
         //TransitionToDemo(DOTween.Sequence());
     }
 
@@ -62,14 +65,17 @@ public class MadLibManager : MonoBehaviour {
     }
 
     void TransitionToDemo(Sequence seq) {
-        seq.Insert(4.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainStart, 2.0f));
-        seq.Insert(4.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainStart, 2.0f));
+        float duration = seq.Duration();
+        seq.Insert(duration, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainStart, 2.0f));
+        seq.Insert(duration, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainStart, 2.0f));
         seq.AppendInterval(2.0f);
 		seq.AppendCallback(()=> perspective1.gameObject.SetActive(false));
         seq.AppendCallback(()=> perspective2.gameObject.SetActive(true));
-        seq.Insert(8.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 2.0f));
-        seq.Insert(8.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 2.0f));
+        duration = seq.Duration();
+        seq.Insert(duration, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 2.0f));
+        seq.Insert(duration, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 2.0f));
         seq.AppendCallback(StartPong);
+        seq.AppendInterval(7.0f);
         seq.AppendCallback(StartNextMadlib);
 	}
 
@@ -82,22 +88,24 @@ public class MadLibManager : MonoBehaviour {
 		madlibs[currentLibIndex].StartSelections();
         madlibs[currentLibIndex].finishCallback += EndMadlib;
         madlibs[currentLibIndex].onSwitchSentence += OnSwitchSentence;
+        ++currentLibIndex;
 	}
 
     void EndMadlib(float finalGrade) {
-        if (finalGrade > 1.5f) {
+        Sequence seq = DOTween.Sequence();
+        //seq.AppendCallback(() => audience.switchToPose(poseIndex));
+        //seq.AppendCallback(() => audience.switchToRestPose());
+
+        if (finalGrade >= 0.0f) {
             soundSystem.PlaySound("MadlibChoiceGood");
+            seq.AppendInterval(4.0f);
         } else if (finalGrade < 0.0f) {
             soundSystem.PlaySound("MadlibChoiceBad");
+            seq.AppendInterval(4.0f);
         }
         sweatLevel -= finalGrade;
 
         ClearCandidateChoices();
-
-        Sequence seq = DOTween.Sequence();
-        //seq.AppendCallback(() => audience.switchToPose(poseIndex));
-        seq.AppendInterval(4.0f);
-        //seq.AppendCallback(() => audience.switchToRestPose());
         
         ++promptCounter;
         if (phase == Phase.BeforeDemo && promptCounter >= promptsBeforeDemo) {
@@ -126,6 +134,7 @@ public class MadLibManager : MonoBehaviour {
 		GameObject.Find("RightTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = "";
+		GameObject.Find("DisplayTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("MadlibPanel").GetComponent<CanvasGroup>().alpha = 0.0f;
 	}
 }

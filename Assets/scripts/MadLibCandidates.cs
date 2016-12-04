@@ -17,15 +17,21 @@ public class MadLibCandidates : MonoBehaviour {
 	public string selectedCandidate { get; set; }
 
 	public void ShowPrompt() {
-		GameObject.Find("UpTextUI").GetComponent<Text>().text = upCandidate;
-		GameObject.Find("DownTextUI").GetComponent<Text>().text = downCandidate;
-		GameObject.Find("LeftTextUI").GetComponent<Text>().text = leftCandidate;
-		GameObject.Find("RightTextUI").GetComponent<Text>().text = rightCandidate;
+        GameObject.Find("UpTextUI").GetComponent<Text>().text = kappatalize(upCandidate);
+		GameObject.Find("DownTextUI").GetComponent<Text>().text = kappatalize(downCandidate);
+		GameObject.Find("LeftTextUI").GetComponent<Text>().text = kappatalize(leftCandidate);
+		GameObject.Find("RightTextUI").GetComponent<Text>().text = kappatalize(rightCandidate);
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = prompt;
+		GameObject.Find("DisplayTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("MadlibPanel").GetComponent<CanvasGroup>().alpha = 1.0f;
 	}
 
-	public void setSelectedCandidate(string s) {
+    public string kappatalize(string instr) {
+        string first = instr[0].ToString().ToUpper();
+        return first + instr.Substring(1);
+    }
+
+    public void setSelectedCandidate(string s) {
 		selectedCandidate = s;
 	}
 }
