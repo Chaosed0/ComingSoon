@@ -30,7 +30,7 @@ public class MadLibManager : MonoBehaviour {
     void DoIntroSequence() {
         ClearCandidateChoices();
 
-        soundSystem.PlayBackgroundMusic("Opening");
+        soundSystem.PlaySound("Opening");
 
         Sequence seq = DOTween.Sequence();
         seq.Insert(3.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 3.0f));
@@ -60,8 +60,19 @@ public class MadLibManager : MonoBehaviour {
 
 	void StartNextMadlib() {
 		madlibs[currentLibIndex].StartSelections();
-        madlibs[currentLibIndex].finishCallback += TransitionToDemo;
+        madlibs[currentLibIndex].finishCallback += EndMadlib;
 	}
+
+    void EndMadlib(MadLibCandidates.ChoiceGrade finalGrade) {
+        if (finalGrade == MadLibCandidates.ChoiceGrade.Good) {
+            soundSystem.PlaySound("MadlibChoiceGood");
+        } else {
+            soundSystem.PlaySound("MadlibChoiceBad");
+        }
+
+        // Temporary - we should do several madlibs first
+        TransitionToDemo();
+    }
     
 	public void ClearCandidateChoices() {
 		GameObject.Find("UpTextUI").GetComponent<Text>().text = "";
