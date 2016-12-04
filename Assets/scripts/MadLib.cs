@@ -10,7 +10,7 @@ public class MadLib : MonoBehaviour {
 	private bool selectionActive = false;
 	//private bool sentenceActive = false;
 	private int currentCandidate = 0;
-	private string[] selectedCandidates;
+	private string[] selectedCandidates = new string[0];
 	private const float TIME_BETWEEN = 3.0f;
 	private int currentDisplayingStory = 0;
 
@@ -18,10 +18,15 @@ public class MadLib : MonoBehaviour {
 	public FinishCallback finishCallback;
 	
 	public void StartSelections() {
-		selectedCandidates = new string[candidates.Length];
-		//finishCallback = cb;
-		selectionActive = true;
-		candidates[currentCandidate].ShowPrompt();
+		if (candidates.Length > 0) {
+			selectedCandidates = new string[candidates.Length];
+			selectionActive = true;
+			candidates[currentCandidate].ShowPrompt();
+		} else {
+			//Go to dialogue directly.
+			ClearCandidateChoices();
+			StartSentences();
+		}
 	}
 
 	private void NextSelection() {
