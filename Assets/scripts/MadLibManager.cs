@@ -52,6 +52,10 @@ public class MadLibManager : MonoBehaviour {
         }
     }
 
+    public void addSweatLevel(float sweatLevel) {
+        this.sweatLevel += sweatLevel;
+    }
+
     void DoIntroSequence() {
         ClearCandidateChoices();
 
