@@ -25,7 +25,7 @@ public class MadLibManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        DoIntroSequence();
+        TransitionToDemo();
     }
 
     void DoIntroSequence() {
@@ -52,6 +52,7 @@ public class MadLibManager : MonoBehaviour {
         seq.Insert(4.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 2.0f));
         seq.Insert(4.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 2.0f));
         seq.AppendCallback(StartPong);
+        seq.AppendCallback(StartNextMadlib);
 	}
 
     void StartPong() {
