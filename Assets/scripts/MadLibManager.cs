@@ -20,14 +20,20 @@ public class MadLibManager : MonoBehaviour {
     public Transform perspective2;
     public Transform pongGame;
 
+    public AudioSource musicSource;
+    public AudioClip introClip;
+    public AudioClip pongClip;
+
 	// Use this for initialization
 	void Start () {
         ClearCandidateChoices();
 
+        musicSource.clip = introClip;
+        musicSource.Play();
+
         Sequence seq = DOTween.Sequence();
-        seq.AppendInterval(1.0f);
-        seq.Insert(1.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 2.0f));
-        seq.Insert(1.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 2.0f));
+        seq.Insert(3.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 3.0f));
+        seq.Insert(3.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 3.0f));
         seq.AppendInterval(2.0f);
         seq.AppendCallback(StartNextMadlib);
     }
@@ -39,12 +45,19 @@ public class MadLibManager : MonoBehaviour {
         seq.Insert(0.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainStart, 2.0f));
         seq.Insert(0.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainStart, 2.0f));
         seq.AppendInterval(2.0f);
-        seq.AppendCallback(()=> { perspective1.gameObject.SetActive(false); Debug.Log("test"); });
+        seq.AppendCallback(()=> perspective1.gameObject.SetActive(false));
         seq.AppendCallback(()=> perspective2.gameObject.SetActive(true));
         seq.Insert(4.0f, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainTarget, 2.0f));
         seq.Insert(4.0f, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainTarget, 2.0f));
-        seq.AppendCallback(()=> pongGame.gameObject.SetActive(true));
+        seq.AppendCallback(StartPong);
 	}
+
+    void StartPong() {
+        musicSource.loop = true;
+        musicSource.clip = pongClip;
+        musicSource.Play();
+        pongGame.gameObject.SetActive(true);
+    }
 
 	void StartNextMadlib() {
 		madlibs[currentLibIndex].StartSelections();
