@@ -12,7 +12,7 @@ public class MadLib : MonoBehaviour {
 	private int currentCandidate = 0;
 	private string[] selectedCandidates = new string[0];
 	private MadLibCandidates.ChoiceGrade[] selectedCandidateGrades = new MadLibCandidates.ChoiceGrade[0];
-	private const float TIME_BETWEEN = 3.0f;
+	private const float TIME_BETWEEN = 4.0f;
 	private int currentDisplayingStory = 0;
 
 	public delegate void FinishCallback(MadLibCandidates.ChoiceGrade grade);
@@ -42,6 +42,7 @@ public class MadLib : MonoBehaviour {
 			candidates[currentCandidate].ShowPrompt();
 		} else {
 			selectionActive = false;
+            currentCandidate = 0;
 			//sentenceActive = true;
 			ClearCandidateChoices();
 			StartSentences();
@@ -68,6 +69,8 @@ public class MadLib : MonoBehaviour {
                 onSwitchSentence();
             }
 		} else {
+            currentDisplayingStory = 0;
+
             float avg = 0.0f;
             for (int i = 0; i < selectedCandidateGrades.Length; i++) {
                 avg += (int)selectedCandidateGrades[i];

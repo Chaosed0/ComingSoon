@@ -4,6 +4,7 @@ using UnityEngine;
 public class DudeController : MonoBehaviour
 {
     public float poseSwitchTime = 0.4f;
+    public float scaling = -0.1f;
     public Sprite[] poses = null;
     public int restPose = 0;
     public SpriteRenderer spriteRenderer = null;
@@ -28,7 +29,7 @@ public class DudeController : MonoBehaviour
 
             if (poseSwitchTimer <= poseSwitchTime - actualSwitchTime) {
                 float interp = Util.easeInQuad(poseSwitchTimer / (poseSwitchTime - actualSwitchTime));
-                transform.localScale = new Vector3(initialScale.x, initialScale.y - 0.1f * interp, initialScale.z);
+                transform.localScale = new Vector3(initialScale.x, initialScale.y + scaling * interp, initialScale.z);
             } else {
                 if (needsSwitchPose) {
                     needsSwitchPose = false;
@@ -37,7 +38,7 @@ public class DudeController : MonoBehaviour
                 }
 
                 float interp = Util.easeOutQuad((poseSwitchTimer - actualSwitchTime) / (poseSwitchTime - actualSwitchTime));
-                transform.localScale = new Vector3(initialScale.x, initialScale.y - 0.1f * (1.0f - interp), initialScale.z);
+                transform.localScale = new Vector3(initialScale.x, initialScale.y + scaling * (1.0f - interp), initialScale.z);
             }
         } else {
             transform.localScale = initialScale;
