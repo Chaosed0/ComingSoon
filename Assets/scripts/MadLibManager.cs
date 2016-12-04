@@ -80,5 +80,7 @@ public class MadLibManager : MonoBehaviour {
 		GameObject.Find("LeftTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("RightTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = "";
+		GameObject.Find("PromptTextUI").GetComponent<Text>().text = "";
+		GameObject.Find("MadlibPanel").GetComponent<CanvasGroup>().alpha = 0.0f;
 	}
 }

@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 4ea6e0999b7a6674b84b3fa2e173dd18
+timeCreated: 1480822336
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: ApresRE
+  fontNames:
+  - ApresRE
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 2a590ac95757f4f4e92c2c4b320fcb97, type: 3}
+  - {fileID: 12800000, guid: 15b4060acfbf6ea4fb954dba57a984ec, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

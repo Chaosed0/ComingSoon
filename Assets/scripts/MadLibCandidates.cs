@@ -28,6 +28,7 @@ public class MadLibCandidates : MonoBehaviour {
 		GameObject.Find("LeftTextUI").GetComponent<Text>().text = leftCandidate;
 		GameObject.Find("RightTextUI").GetComponent<Text>().text = rightCandidate;
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = prompt;
+		GameObject.Find("MadlibPanel").GetComponent<CanvasGroup>().alpha = 1.0f;
 	}
 
 	public void setSelectedCandidate(string s) {
