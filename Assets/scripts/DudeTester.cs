@@ -15,7 +15,7 @@ class DudeTester : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= period) {
             timer = 0.0f;
-            controller.switchPose();
+            controller.switchToRandomActionPose();
         }
     }
 }

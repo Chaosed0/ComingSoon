@@ -18,6 +18,9 @@ public class MadLib : MonoBehaviour {
 	public delegate void FinishCallback(MadLibCandidates.ChoiceGrade grade);
 	public FinishCallback finishCallback;
 
+    public delegate void SwitchSentence();
+    public SwitchSentence onSwitchSentence;
+
     public SoundSystem soundSystem;
 	
 	public void StartSelections() {
@@ -51,6 +54,9 @@ public class MadLib : MonoBehaviour {
 		}
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = story[currentDisplayingStory];
 		WaitAndDisplayNextSentence();
+        if (onSwitchSentence != null) {
+            onSwitchSentence();
+        }
 	}
 
 	private void NextSentence() {
@@ -58,6 +64,9 @@ public class MadLib : MonoBehaviour {
 		if (currentDisplayingStory < story.Length) {
 			GameObject.Find("PromptTextUI").GetComponent<Text>().text = story[currentDisplayingStory];
 			WaitAndDisplayNextSentence();
+            if (onSwitchSentence != null) {
+                onSwitchSentence();
+            }
 		} else {
             float avg = 0.0f;
             for (int i = 0; i < selectedCandidateGrades.Length; i++) {

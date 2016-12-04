@@ -21,6 +21,7 @@ public class MadLibManager : MonoBehaviour {
     public Transform pongGame;
 
     public SoundSystem soundSystem;
+    public DudeController dudeController;
 
 	// Use this for initialization
 	void Start () {
@@ -61,6 +62,7 @@ public class MadLibManager : MonoBehaviour {
 	void StartNextMadlib() {
 		madlibs[currentLibIndex].StartSelections();
         madlibs[currentLibIndex].finishCallback += EndMadlib;
+        madlibs[currentLibIndex].onSwitchSentence += OnSwitchSentence;
 	}
 
     void EndMadlib(MadLibCandidates.ChoiceGrade finalGrade) {
@@ -70,8 +72,15 @@ public class MadLibManager : MonoBehaviour {
             soundSystem.PlaySound("MadlibChoiceBad");
         }
 
+        dudeController.switchToRestPose();
+
         // Temporary - we should do several madlibs first
         TransitionToDemo();
+    }
+
+    void OnSwitchSentence() {
+        Debug.Log("switch");
+        dudeController.switchToRandomActionPose();
     }
     
 	public void ClearCandidateChoices() {
