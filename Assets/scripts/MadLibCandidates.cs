@@ -24,6 +24,7 @@ public class MadLibCandidates : MonoBehaviour {
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = prompt;
 		GameObject.Find("DisplayTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("MadlibPanel").GetComponent<CanvasGroup>().alpha = 1.0f;
+		GameObject.Find("UIDirArrows").GetComponent<Image>().enabled = true;
 	}
 
     public string kappatalize(string instr) {

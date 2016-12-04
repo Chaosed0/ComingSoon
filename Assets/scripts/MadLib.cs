@@ -127,6 +127,7 @@ public class MadLib : MonoBehaviour {
 		GameObject.Find("RightTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("PromptTextUI").GetComponent<Text>().text = "";
 		GameObject.Find("DisplayTextUI").GetComponent<Text>().text = "";
+		GameObject.Find("UIDirArrows").GetComponent<Image>().enabled = false;
 	}
 
 	public void Update() {
