@@ -71,11 +71,12 @@ public class MadLib : MonoBehaviour {
                 isLong = true;
             }
 
+            if (onSwitchSentence != null) {
+                onSwitchSentence();
+            }
+
 			WaitAndDisplayNextSentence(isLong);
 		});
-        if (onSwitchSentence != null) {
-            onSwitchSentence();
-        }
 	}
 
 	private void NextSentence() {
@@ -91,6 +92,10 @@ public class MadLib : MonoBehaviour {
                 bool isLong = false;
                 if (story.Length >= 100) {
                     isLong = true;
+                }
+
+                if (onSwitchSentence != null) {
+                    onSwitchSentence();
                 }
 
                 WaitAndDisplayNextSentence(isLong);

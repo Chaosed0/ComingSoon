@@ -126,13 +126,15 @@ public class MadLibManager : MonoBehaviour {
             promptCounter = 0;
             phase = Phase.DuringDemo;
         } else if (phase == Phase.DuringDemo && promptCounter >= promptsAfterDemo) {
-            if (sweatLevel <= 40) {
-                SceneManager.LoadScene("GoodEnding");
-            } else if (sweatLevel <= 70) {
-                SceneManager.LoadScene("BadEnding");
-            } else {
-                SceneManager.LoadScene("WorstEnding");
-            }
+            seq.AppendCallback(() => {
+                if (sweatLevel <= 40) {
+                    SceneManager.LoadScene("GoodEnding");
+                } else if (sweatLevel <= 70) {
+                    SceneManager.LoadScene("BadEnding");
+                } else {
+                    SceneManager.LoadScene("WorstEnding");
+                }
+            });
             promptCounter = 0;
         } else {
             // Go to new madlib
