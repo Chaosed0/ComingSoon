@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
 
@@ -39,10 +40,9 @@ public class MadLibManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         DoIntroSequence();
+        //TransitionToDemo(DOTween.Sequence());
 
         Debug.Assert(promptsBeforeDemo + promptsAfterDemo == madlibs.Length);
-
-        //TransitionToDemo(DOTween.Sequence());
     }
 
     void Update() {
@@ -97,15 +97,23 @@ public class MadLibManager : MonoBehaviour {
 
     void EndMadlib(float finalGrade) {
         Sequence seq = DOTween.Sequence();
-        //seq.AppendCallback(() => audience.switchToPose(poseIndex));
-        //seq.AppendCallback(() => audience.switchToRestPose());
 
-        if (finalGrade >= 0.0f) {
-            soundSystem.PlaySound("MadlibChoiceGood");
-            seq.AppendInterval(4.0f);
-        } else if (finalGrade < 0.0f) {
+        Debug.Log(finalGrade);
+
+        if (finalGrade >= -1.0f) {
+            if (finalGrade <= 2.0f) {
+                soundSystem.PlaySound("MadlibChoiceMedium");
+            } else {
+                soundSystem.PlaySound("MadlibChoiceGood");
+                seq.AppendCallback(() => audience.StartPose(2));
+                seq.AppendInterval(4.0f);
+                seq.AppendCallback(() => audience.StartResting());
+            }
+        } else {
             soundSystem.PlaySound("MadlibChoiceBad");
+            seq.AppendCallback(() => audience.StartPose(1));
             seq.AppendInterval(4.0f);
+            seq.AppendCallback(() => audience.StartResting());
         }
         sweatLevel -= finalGrade;
 
@@ -118,7 +126,13 @@ public class MadLibManager : MonoBehaviour {
             promptCounter = 0;
             phase = Phase.DuringDemo;
         } else if (phase == Phase.DuringDemo && promptCounter >= promptsAfterDemo) {
-            // TODO: End game
+            if (sweatLevel <= 40) {
+                SceneManager.LoadScene("GoodEnding");
+            } else if (sweatLevel <= 70) {
+                SceneManager.LoadScene("BadEnding");
+            } else {
+                SceneManager.LoadScene("WorstEnding");
+            }
             promptCounter = 0;
         } else {
             // Go to new madlib

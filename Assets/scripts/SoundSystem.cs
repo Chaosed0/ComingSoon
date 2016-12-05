@@ -34,10 +34,7 @@ public class SoundSystem : MonoBehaviour {
             SoundSystemDef def = soundLibrary[i];
             soundMap[def.soundName] = def.clip;
         }
-    }
 
-    void Start() {
-        Object.DontDestroyOnLoad(this.gameObject);
         sources = new AudioSource[numberOfSources];
         for (int i = 0; i < numberOfSources; i++) {
             AudioSource source = Instantiate(audioSourcePrefab, transform.position, transform.rotation) as AudioSource;
@@ -46,6 +43,10 @@ public class SoundSystem : MonoBehaviour {
         }
         backgroundMusic = Instantiate(audioSourcePrefab, transform.position, transform.rotation) as AudioSource;
         backgroundMusic.transform.parent = this.transform;
+    }
+
+    void Start() {
+        Object.DontDestroyOnLoad(this.gameObject);
     }
 
     private AudioSource GetNextSource() {
