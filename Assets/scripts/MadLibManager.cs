@@ -133,7 +133,7 @@ public class MadLibManager : MonoBehaviour {
             phase = Phase.DuringDemo;
         } else if (phase == Phase.DuringDemo && promptCounter >= promptsAfterDemo) {
             seq.AppendCallback(() => {
-                if (sweatLevel <= 40) {
+                if (sweatLevel <= 50) {
                     SceneManager.LoadScene("GoodEnding");
                 } else if (sweatLevel <= 70) {
                     SceneManager.LoadScene("BadEnding");
