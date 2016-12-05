@@ -30,6 +30,7 @@ public class MadLibManager : MonoBehaviour {
     public SoundSystem soundSystem;
     public DudeController dudeController;
     public DudeController audience;
+    public DudeController audience2;
 
     public float sweatAccelRate = 1.0f;
     public float sweatLevel = 0;
@@ -72,6 +73,7 @@ public class MadLibManager : MonoBehaviour {
         float duration = seq.Duration();
         seq.Insert(duration, DOTween.To(()=> leftCurtain.x, x => leftCurtain.x = x, -curtainStart, 2.0f));
         seq.Insert(duration, DOTween.To(()=> rightCurtain.x, x => rightCurtain.x = x, curtainStart, 2.0f));
+        seq.AppendCallback(()=> soundSystem.PlaySound("Curtain2"));
         seq.AppendInterval(2.0f);
 		seq.AppendCallback(()=> perspective1.gameObject.SetActive(false));
         seq.AppendCallback(()=> perspective2.gameObject.SetActive(true));
@@ -106,14 +108,18 @@ public class MadLibManager : MonoBehaviour {
             } else {
                 soundSystem.PlaySound("MadlibChoiceGood");
                 seq.AppendCallback(() => audience.StartPose(2));
+                seq.AppendCallback(() => audience2.StartPose(2));
                 seq.AppendInterval(4.0f);
                 seq.AppendCallback(() => audience.StartResting());
+                seq.AppendCallback(() => audience2.StartResting());
             }
         } else {
             soundSystem.PlaySound("MadlibChoiceBad");
             seq.AppendCallback(() => audience.StartPose(1));
+            seq.AppendCallback(() => audience2.StartPose(1));
             seq.AppendInterval(4.0f);
             seq.AppendCallback(() => audience.StartResting());
+            seq.AppendCallback(() => audience2.StartResting());
         }
         sweatLevel -= finalGrade;
 

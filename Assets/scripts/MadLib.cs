@@ -12,8 +12,8 @@ public class MadLib : MonoBehaviour {
 	private int currentCandidate = 0;
 	private string[] selectedCandidates = new string[0];
 	private float[] selectedCandidateGrades = new float[0];
-	private const float TIME_BETWEEN = 4.0f;
-	private const float TIME_BETWEEN_LONG = 7.0f;
+	private const float TIME_BETWEEN = 3.5f;
+	private const float TIME_BETWEEN_LONG = 5.0f;
 	private int currentDisplayingStory = 0;
 
 	public delegate void FinishCallback(float finalGrade);

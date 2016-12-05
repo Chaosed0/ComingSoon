@@ -17,7 +17,7 @@ public class SweatSpawner : MonoBehaviour {
 	}
 
 	void Update () {
-        float interp = Mathf.Sin(manager.sweatLevel / 100.0f * Mathf.PI / 2.0f);
+        float interp = Mathf.Sin(manager.sweatLevel / 75.0f * Mathf.PI / 2.0f);
         float sweatSpawnTime = minSweatSpawnTime + (interp * (maxSweatSpawnTime - minSweatSpawnTime));
 
         sweatSpawnTimer += Time.deltaTime;
